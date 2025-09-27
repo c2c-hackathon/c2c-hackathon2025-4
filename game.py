@@ -66,6 +66,7 @@ class Game:
         """The sound that is played when the game ends."""
         # OPTIONAL: change this to a different sound if you want
         return "end_of_game"
+    
 
     def reveal_board(self):
         for i in range(self.button_pad.button_count):
@@ -163,12 +164,12 @@ class Game:
         # TODO: assign to buttons
         random.shuffle(self.colors)
         random.shuffle(self.sounds)
-
+        self.buttons=[]
         for i in range(8):    
             self.buttons.append(ButtonInfo(self.colors[i], self.sounds[i], False))
 
         self.buttons= self.buttons + self.buttons
-        random.shuffle(self.buttons)
+        # random.shuffle(self.buttons)
         # print(self.buttons)
         
     def _start_game(self):
@@ -188,6 +189,13 @@ class Game:
             self.play_game = False
             self.thread.join()
             self.button_pad.cleanup()
+    #gets called when game ends
+    def end_game(self):
+        self.speaker.play_preloaded_wav(end_of_game, wait_until_done=False)
+        
+        self.initialize_button_pad()
+        self._start_game()
+
 
 
 def _main():
