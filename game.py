@@ -50,7 +50,16 @@ class Game:
         # OPTIONAL: change this to a different sound if you want
         return "end_of_game"
 
+    def reveal_board(self):
+        for i in range(self.button_pad.button_count):
+            button = self.buttons[i]
+            self.button_pad.set_button_led_color(self.button_pad.get_button(i+1), button.color)
+
     def _background_logic_checker(self):
+        #rows, cols = 4, 4
+        #indexer = random.randint(0,7)
+        #board = [[ButtonInfo(color = COLORS[indexer], sound = SOUNDS[indexer], matched = False) for _ in range(cols)] for _ in range(rows)]
+        #print(board)
         while self.play_game:
             time.sleep(0.005)  # Prevents busy-waiting
             if self.queue.empty():
@@ -74,7 +83,7 @@ class Game:
         if button.pin.info.number == 1:
             print('reset and shuffle the game')
         if button.pin.info.number == 2:
-            print('reveal the game, game ends')
+            self.reveal_board()
 
         # TODO: this is called when a button is held. Add what you need to here
         pass
