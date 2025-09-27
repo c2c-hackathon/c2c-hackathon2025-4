@@ -81,6 +81,7 @@ class Game:
         self.button_pad.clear_button_pad()
         # TODO: Set all buttons to a color, List of colors to choose from: https://github.com/waveform80/colorzero/blob/master/colorzero/tables.py#L315
         # sounds are available in the sounds directory
+        self.colors = ["red", "blue", "gold", "green", "plum", "orchid", "cyan", "gray"]
         self.sounds = [
             "thunder2",
             "fart_z",
@@ -92,7 +93,17 @@ class Game:
             "car_horn_x",
         ]
         # TODO: assign to buttons
+        #random.shuffle(self.colors)
+        random.shuffle(self.sounds)
+        #self.buttons = [[ButtonInfo(color = COLORS[indexer], sound = SOUNDS[indexer], matched = False) for _ in range(cols)] for _ in range(rows)]
 
+        for i in range(8):    
+            self.buttons.append(ButtonInfo(self.colors[i], self.sounds[i], False))
+
+        self.buttons= self.buttons + self.buttons
+        random.shuffle(self.buttons)
+        print(self.buttons)
+        
     def _start_game(self):
         self.thread = threading.Thread(target=self._background_logic_checker)
         self.thread.start()
