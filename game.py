@@ -2,6 +2,7 @@ import logging
 import queue
 import threading
 import time
+import random
 import typing
 import random
 from dataclasses import dataclass
@@ -12,6 +13,20 @@ from matrix_button_led_controller import MatrixButtonLEDController
 _logger = logging.getLogger(__name__)
 _logger.setLevel(logging.DEBUG)
 USE_LED_HAT = True
+
+# #correct = [[0,0,0,0],[0,0,0,0], [0,0,0,0],[0,0,0,0]]
+# COLORS = ["red", "blue", "gold", "green", "plum", "orchid", "cyan", "gray"]
+# SOUNDS = [
+#             "thunder2",
+#             "fart_z",
+#             "baby_x",
+#             "slide_whistle_x",
+#             "arrow2",
+#             "phone_pay",
+#             "bloop_x",
+#             "car_horn_x",
+#         ]#
+# used = []
 
 @dataclass
 class ButtonInfo:
@@ -32,6 +47,7 @@ class Game:
         self.started = False
         self.play_game = True
         self.queue = queue.Queue()
+        self.last_pressed_index = None
 
     @property
     def correct_sound(self):
@@ -98,7 +114,36 @@ class Game:
 
     def when_released(self, button):
         # TODO: this is called when a button is released. Add what you need to here
-        pass
+        buttonInfo = self.buttons[button.pin.info.number-1]
+        # print(f"just clicked: {buttonInfo.matched}")
+        # print(f"Tihs button color: {buttonInfo.color}")
+        if(self.last_pressed_index is not None):
+            # print(button.pin.info.number-1,self.last_pressed_index)
+            if(button.pin.info.number-1 != self.last_pressed_index): 
+                last_pressed_info = self.buttons[self.last_pressed_index]
+                # print(f"Last clicked: {last_pressed_info.matched}")
+                if(buttonInfo.matched is not False and last_pressed_info.matched is not False):
+                    pass
+                elif(buttonInfo.matched is not False):
+                    self.button_pad.set_button_led_color(self.button_pad.get_button(self.last_pressed_index+1), "black")
+                elif(last_pressed_info.matched is not False):
+                    self.button_pad.set_button_led_color(self.button_pad.get_button(button.pin.info.number), "black")
+                else:
+                    # print(f"Last button color: {last_pressed_info.color}")
+                    if(buttonInfo.color == last_pressed_info.color): 
+                        buttonInfo.matched = True
+                        last_pressed_info.matched = True
+                    else:
+                        # print("Else")
+
+                        self.button_pad.set_button_led_color(self.button_pad.get_button(button.pin.info.number), "black") 
+                        self.button_pad.set_button_led_color(self.button_pad.get_button(self.last_pressed_index+1), "black")
+                
+                self.last_pressed_index = None
+        
+        # print("Else1")
+        else:
+            self.last_pressed_index = button.pin.info.number-1
 
     def initialize_button_pad(self):
         self.button_pad.clear_button_pad()
@@ -116,16 +161,15 @@ class Game:
             "car_horn_x",
         ]
         # TODO: assign to buttons
-        #random.shuffle(self.colors)
+        random.shuffle(self.colors)
         random.shuffle(self.sounds)
-        #self.buttons = [[ButtonInfo(color = COLORS[indexer], sound = SOUNDS[indexer], matched = False) for _ in range(cols)] for _ in range(rows)]
 
         for i in range(8):    
             self.buttons.append(ButtonInfo(self.colors[i], self.sounds[i], False))
 
         self.buttons= self.buttons + self.buttons
         random.shuffle(self.buttons)
-        print(self.buttons)
+        # print(self.buttons)
         
     def _start_game(self):
         self.thread = threading.Thread(target=self._background_logic_checker)
