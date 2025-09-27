@@ -145,7 +145,7 @@ class Game:
         # print("Else1")
         else:
             self.last_pressed_index = button.pin.info.number-1
-
+        self.handle_end_game()
     def initialize_button_pad(self):
         self.button_pad.clear_button_pad()
         # TODO: Set all buttons to a color, List of colors to choose from: https://github.com/waveform80/colorzero/blob/master/colorzero/tables.py#L315
@@ -190,11 +190,12 @@ class Game:
             self.thread.join()
             self.button_pad.cleanup()
     #gets called when game ends
-    def end_game(self):
-        self.speaker.play_preloaded_wav(end_of_game, wait_until_done=False)
-        
-        self.initialize_button_pad()
-        self._start_game()
+    def handle_end_game(self):
+        print("x", all(buttonInfo.matched for buttonInfo in self.buttons))
+        if (all(buttonInfo.matched for buttonInfo in self.buttons)):
+            self.speaker.play_preloaded_wav("end_of_game", wait_until_done=True)
+            self.initialize_button_pad()
+            self._start_game()
 
 
 
