@@ -5,7 +5,7 @@ import pytest
 
 
 def delay_to_let_game_process():
-    time.sleep(0.1)
+    time.sleep(0.3)
 
 
 def solve_game(game_instance, mock_button_board, mock_rgb_led, mock_audio_play):
