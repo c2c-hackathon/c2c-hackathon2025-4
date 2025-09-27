@@ -85,10 +85,12 @@ class Game:
 
 
     def when_held(self, button):
-        print("Button 16 Pressed")
         if button.pin.info.number == 1:
-            print('reset and shuffle the game')
+            print(f'button {button.pin.info.number} held')
+            self.initialize_button_pad()
+            self._start_game()
         if button.pin.info.number == 2:
+            print(f'button {button.pin.info.number} held')
             self.reveal_board()
 
         # TODO: this is called when a button is held. Add what you need to here
@@ -129,6 +131,7 @@ class Game:
         self.thread = threading.Thread(target=self._background_logic_checker)
         self.thread.start()
         # TODO: play a sound to start the game
+        self.speaker.play_preloaded_wav("drum_roll2", wait_until_done=True)
         self.started = True
 
     def play(self):
