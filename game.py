@@ -3,6 +3,7 @@ import queue
 import threading
 import time
 import typing
+import random
 from dataclasses import dataclass
 
 import library
@@ -68,15 +69,20 @@ class Game:
             print(f"Handling button {button_number}")
 
             # Example logic: light up the button that was pressed with a constant color
-            button = self.button_pad.get_button(button_number)
-            self.button_pad.set_button_led_color(button, "red")
-            self.speaker.play_preloaded_wav("bloop_x", wait_until_done=True)  # Play a sound when button is pressed
+            # button = self.button_pad.get_button(button_number)
+            # self.button_pad.set_button_led_color(button, "red")
+            # self.speaker.play_preloaded_wav("bloop_x", wait_until_done=True)  # Play a sound when button is pressed
             # TODO: check your game state, and update things
 
     def when_pressed(self, button):
         # TODO: this is called when a button is pressed. Add what you need to here
         _logger.info(f"Button {button.pin.info.number} pressed")
         self.queue.put(button.pin.info.number)
+
+        buttonInfo = self.buttons[button.pin.info.number-1]
+        self.button_pad.set_button_led_color(self.button_pad.get_button(button.pin.info.number), buttonInfo.color)
+        self.speaker.play_preloaded_wav(buttonInfo.sound, wait_until_done=False)
+
 
     def when_held(self, button):
         print("Button 16 Pressed")
