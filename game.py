@@ -104,7 +104,7 @@ class Game:
         self.button_pad.clear_button_pad()
         # TODO: Set all buttons to a color, List of colors to choose from: https://github.com/waveform80/colorzero/blob/master/colorzero/tables.py#L315
         # sounds are available in the sounds directory
-        self.colors = ["red", "blue", "gold", "green", "plum", "orchid", "cyan", "gray"]
+        self.colors = ["red", "green", "blue", "#ff00ff", "#00ffff", "gold", "teal", "white"]
         self.sounds = [
             "thunder2",
             "fart_z",
