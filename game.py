@@ -70,6 +70,12 @@ class Game:
         self.queue.put(button.pin.info.number)
 
     def when_held(self, button):
+        print("Button 16 Pressed")
+        if button.pin.info.number == 1:
+            print('reset and shuffle the game')
+        if button.pin.info.number == 2:
+            print('reveal the game, game ends')
+
         # TODO: this is called when a button is held. Add what you need to here
         pass
 
